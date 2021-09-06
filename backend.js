@@ -31,7 +31,7 @@ app.post('/', (req, res) => {
   connection.query(req.body['query'], function (error, results, fields) {
     if (error) {
       res.status(500).send({error: error['sqlMessage']})
-      console.log('Error while executing query \'' + req.body['query'] + '\': ' + error['sqlMessage'])
+      console.log(getTime(), 'Error while executing query \'' + req.body['query'] + '\': ' + error['sqlMessage'])
     } else {
       res.send({data: results});
       console.log(getTime(), 'Executed query: \'' + req.body['query'] + '\'');
@@ -40,5 +40,5 @@ app.post('/', (req, res) => {
 }})
 
 app.listen(port, () => {
-  console.log(`Backend is running on http://localhost:${port}`)
+  console.log(getTime(), `Backend is running on http://localhost:${port}`)
 })
