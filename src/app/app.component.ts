@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Ref } from './classes';
+import { dataset, Ref } from './classes';
 import { DbConnectionService } from './db-connection.service';
 
 
@@ -11,20 +11,8 @@ import { DbConnectionService } from './db-connection.service';
 export class AppComponent {
   title = 'w3schools';
 
-  tabs: Ref[] = [{
-    name: 'Customers',
-    url: ''
-  },{
-    name: 'Orders',
-    url: ''
-  },{
-    name: 'Products',
-    url: ''
-  },{
-    name: 'Order details',
-    url: ''
-  },]
+  datasets = Object.entries(dataset);
 
-  constructor(private dbConnectionService: DbConnectionService){
+  constructor(){
   }
 }

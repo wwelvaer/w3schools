@@ -1,0 +1,11 @@
+.page {
+  display: table;
+  width: 100%;
+}
+.page-content,
+.sidebar {
+  display: table-cell;
+}
+.sidebar {
+  width: 150px;
+}

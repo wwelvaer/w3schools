@@ -1,11 +1,13 @@
-
-<mat-drawer-container>
-  <mat-drawer mode="side" opened style="margin-top: 50px;">
-    <div *ngFor="let tab of tabs" style="margin-bottom: 1px;">
-      <button style="width: 150px;" type="button" class="btn btn-secondary">{{ tab.name }}</button>
+<div class="page">
+  <div class="sidebar" style="margin-top: 50px;margin-right: 10px;">
+    <div *ngFor="let ds of datasets" style="margin-bottom: 1px">
+      <button type="button" class="btn btn-secondary btn-block"
+              [routerLink]="['/dataset', ds[0]]">
+        {{ ds[1].name }}
+      </button>
     </div>
-  </mat-drawer>
-  <mat-drawer-content>
+  </div>
+  <div class="page-content">
     <router-outlet></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </div>
+</div>

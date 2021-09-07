@@ -1,0 +1,23 @@
+<div style="margin-left: 10px;">
+  <h1>{{title}}</h1>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">🔎</span>
+    </div>
+    <input type="text" placeholder="Search"  class="form-control" [(ngModel)]="searchTerm">
+  </div>
+  <p><i>{{ filteredEntries().length }} results</i></p>
+  <div *ngIf="!loading && !error" class="container">
+    <div class="row" >
+      <div *ngFor="let h of entryHeaders" class="col-sm" [style]="'border: solid;border-width: 1px;width:' + h.width + 'px'">
+        <b>{{ h.name }}</b>
+      </div>
+    </div>
+    <div *ngFor="let e of filteredEntries(); let i = index" class="row" [style]="'background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
+      <div *ngFor="let h of entryHeaders" class="col-sm" style="border: solid;border-width: 1px;border-top: transparent;">
+        {{ e[h.name] }}
+      </div>
+    </div>
+  </div>
+  <i *ngIf="error"> {{error}}</i>
+</div>

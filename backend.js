@@ -26,11 +26,11 @@ let getTime = () => new Date().toTimeString().split(' ')[0];
 
 app.post('/', (req, res) => {
   if (!req.body['query'])
-    res.status(500).send({error: 'ERROR: couldn\'t find any query to be executed'});
+    res.send({error: 'ERROR: couldn\'t find any query to be executed'});
   else {
   connection.query(req.body['query'], function (error, results, fields) {
     if (error) {
-      res.status(500).send({error: error['sqlMessage']})
+      res.send({error: error['sqlMessage']})
       console.log(getTime(), 'Error while executing query \'' + req.body['query'] + '\': ' + error['sqlMessage'])
     } else {
       res.send({data: results});
