@@ -17,6 +17,7 @@ export class DatasetComponent implements OnInit {
   error: string;
 
   searchTerm: string;
+  searchCol: number = -1;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,7 +26,10 @@ export class DatasetComponent implements OnInit {
   }
 
   filteredEntries = () => {
-    return this.entries.filter(u => Object.values(u).join().toLowerCase().indexOf(this.searchTerm) > -1)
+    return this.entries.filter(u => this.searchCol < 0
+      ? (Object.values(u).join().toString().toLowerCase().indexOf(this.searchTerm.toString().toLowerCase()) > -1)
+      : (u[this.entryHeaders[this.searchCol].name].toString().toLowerCase().indexOf(this.searchTerm.toString().toLowerCase()) > -1)
+    )
   }
 
   ngOnInit(){
@@ -59,6 +63,13 @@ export class DatasetComponent implements OnInit {
         this.loading = false;
         this.title = this.dataset['name']
       });
+    })
+  }
+
+  deleteEntry(id){
+    this.db.executeQuery(`DELETE FROM ${this.dataset.dataset} WHERE ${this.dataset.id}=${id}`).then((r) => {
+      if (r['data']['affectedRows'] === 1)
+        this.entries = this.entries.filter(x => x[this.dataset.id] !== id)
     })
   }
 }

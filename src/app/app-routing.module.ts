@@ -7,7 +7,8 @@ const routes: Routes = [
   { path: '', redirectTo: '/dataset/customers', pathMatch: 'full' },
   { path: 'dataset', redirectTo: '/dataset/customers', pathMatch: 'full' },
   { path: 'dataset/:type', component: DatasetComponent },
-  { path: 'customers', component: CustomersComponent },
+  { path: 'customer', component: CustomersComponent },
+  { path: 'customer/:id', component: CustomersComponent },
 ];
 
 @NgModule({

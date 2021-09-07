@@ -11,7 +11,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomersComponent } from './customers/customers.component';
 import { DatasetComponent } from './dataset/dataset.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MatSidenavModule,
     MatGridListModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

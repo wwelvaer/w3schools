@@ -18,25 +18,44 @@ export interface EntryHeader {
   width: number;
 }
 
+/**
+ *  name (required)
+ *  query (required)
+ *  url     -> used for editing data
+ *  id      -> used for editing and deleting data
+ *  dataset -> used for deleting data
+ */
 export const dataset = {
   customers: {
     name: "Customers",
-    url: "/customers",
+    url: "/customer",
+    id: "CustomerID",
+    dataset: "Customers",
     query: "SELECT * FROM Customers"
   },
   orders: {
     name: "Orders",
-    url: "/orders",
+    url: "/order",
+    id: "OrderID",
+    dataset: "Customers",
     query: "SELECT * FROM Orders"
   },
   products: {
     name: "Products",
-    url: "/products",
+    url: "/product",
+    id: "ProductID",
+    dataset: "Customers",
     query: "SELECT * FROM Products"
   },
-  test: {
+  /* suppliers: {
+    name: "Suppliers",
+    url: "/supplier",
+    id: "SupplierID",
+    dataset: "Suppliers",
+    query: "SELECT * FROM Suppliers"
+  }, */
+  /* test: {
     name: "test",
-    url: "/products",
     query: "SELECT ProductID, ProductName FROM Products"
-  }
+  } */
 }
