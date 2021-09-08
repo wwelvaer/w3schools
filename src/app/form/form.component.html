@@ -1,0 +1,16 @@
+
+<div style="margin-left: 10px;">
+  <h1>{{title}}</h1>
+  <form *ngIf="!loading && !error" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group" *ngFor="let e of inputFields">
+      <label [for]="e[0]">{{e[0]}}</label>
+      <input *ngIf="isNumber(e[1])" [type]="e[1] === 0 ? 'text': 'number'" class="form-control" [id]="e[0]" [placeholder]="e[0]" [formControlName]="e[0]">
+      <select *ngIf="!isNumber(e[1])" class="form-control" [id]="e[0]" [formControlName]="e[0]">
+        <option *ngFor="let x of e[1]" [value]="x.id"> {{x.name}} </option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-success btn-lg">Save</button>
+    <button type="button" (click)="back()" class="btn btn-danger btn-lg">Cancel</button>
+  </form>
+  <i *ngIf="error"> {{error}}</i>
+</div>

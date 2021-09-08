@@ -9,15 +9,15 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CustomersComponent } from './customers/customers.component';
 import { DatasetComponent } from './dataset/dataset.component';
 import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
+import { FormComponent } from './form/form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CustomersComponent,
-    DatasetComponent
+    DatasetComponent,
+    FormComponent
   ],
   imports: [
     BrowserModule,

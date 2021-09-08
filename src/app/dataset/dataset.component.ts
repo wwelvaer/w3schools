@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { dataset, EntryHeader } from '../classes';
+import { EntryHeader } from '../classes';
 import { DbConnectionService } from '../db-connection.service';
+import { QueryService } from '../query.service';
 
 @Component({
   selector: 'app-dataset',
@@ -15,13 +16,15 @@ export class DatasetComponent implements OnInit {
   entries: Object[];
   entryHeaders: EntryHeader[];
   error: string;
+  type: string;
 
   searchTerm: string;
   searchCol: number = -1;
 
   constructor(
     private route: ActivatedRoute,
-    private db: DbConnectionService
+    private db: DbConnectionService,
+    private querries: QueryService
   ) {
   }
 
@@ -42,12 +45,13 @@ export class DatasetComponent implements OnInit {
       this.loading = true;
       this.searchTerm = "";
 
-      if (!params.type || !(params.type in dataset)){
+      if (!params.type || !(params.type in this.querries.datasets)){
         this.title = "ERROR"
         this.error = "Unkown dataset '" + params.type + "'";
         return;
       }
-      this.dataset = dataset[params.type]
+      this.type = params.type;
+      this.dataset = this.querries.datasets[params.type]
       this.db.executeQuery(this.dataset['query']).then(d => {
         if (d['error']){
           this.title = "ERROR"
@@ -58,7 +62,7 @@ export class DatasetComponent implements OnInit {
         let k: string[] = Object.keys(this.entries[0]);
         this.entryHeaders = k.map((x: string) => { return {
           name: x,
-          width: window.innerWidth / k.length
+          width: window.innerWidth / (k.length + (this.dataset.id && (this.dataset.url || this.dataset.dataset) ? 1 : 0))
         }});
         this.loading = false;
         this.title = this.dataset['name']
@@ -67,7 +71,7 @@ export class DatasetComponent implements OnInit {
   }
 
   deleteEntry(id){
-    this.db.executeQuery(`DELETE FROM ${this.dataset.dataset} WHERE ${this.dataset.id}=${id}`).then((r) => {
+    this.querries.deleteEntry(id, this.dataset.dataset, this.dataset.id).then((r) => {
       if (r['data']['affectedRows'] === 1)
         this.entries = this.entries.filter(x => x[this.dataset.id] !== id)
     })

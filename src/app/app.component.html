@@ -2,8 +2,8 @@
   <div class="sidebar" style="margin-top: 50px;margin-right: 10px;">
     <div *ngFor="let ds of datasets" style="margin-bottom: 1px">
       <button type="button" class="btn btn-secondary btn-block"
-              [routerLink]="['/dataset', ds[0]]">
-        {{ ds[1].name }}
+              [routerLink]="['/dataset', ds]">
+        {{ ds }}
       </button>
     </div>
   </div>

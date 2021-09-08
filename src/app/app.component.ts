@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { dataset, Ref } from './classes';
-import { DbConnectionService } from './db-connection.service';
+import { QueryService } from './query.service';
 
 
 @Component({
@@ -11,8 +10,8 @@ import { DbConnectionService } from './db-connection.service';
 export class AppComponent {
   title = 'w3schools';
 
-  datasets = Object.entries(dataset);
+  datasets = Object.keys(this.querries.datasets);
 
-  constructor(){
+  constructor(private querries: QueryService){
   }
 }
