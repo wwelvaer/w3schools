@@ -8,10 +8,19 @@ import { DbConnectionService } from './db-connection.service';
 export class QueryService {
 
   /**
-   *  query (required)
-   *  url     -> used for editing data
-   *  id      -> used for editing and deleting data
-   *  dataset -> used for deleting data
+   *  query (required): Query used to display data
+   *
+   *  id: Column name that holds the Primary Key
+   *    -> used for editing and deleting data
+   *
+   *  dataset: Table name
+   *    -> used for deleting data
+   *
+   *  form: InputFields of the form
+   *    Text:
+   *    Number:
+   *    Date:
+   *    Reference: Requires a query with 2 columns: the foreign key and a string value
    */
   datasets = {
     customers: {
