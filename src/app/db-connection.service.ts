@@ -12,8 +12,13 @@ export class DbConnectionService {
   constructor(private http: HttpClient) {
   }
 
+  /**
+   * sends a http POST request to the backend containing a query
+   * @param query
+   * @returns promise
+   */
   async executeQuery(query: string){
-    return await this.http.post(this.url, {'query': query}).toPromise();
+    return this.http.post(this.url, {'query': query}).toPromise();
   }
 
 

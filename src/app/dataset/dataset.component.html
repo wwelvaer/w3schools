@@ -9,7 +9,7 @@
     <div class="input-group-append">
       <select style="padding-left: 5px;" [(ngModel)]="searchCol">
         <option value="-1" selected>All columns</option>
-        <option *ngFor="let h of entryHeaders; let i = index" [value]="i">{{h.name}}</option>
+        <option *ngFor="let h of entryHeaders; let i = index" [value]="i">{{h}}</option>
       </select>
     </div>
   </div>
@@ -17,7 +17,7 @@
   <div *ngIf="!loading && !error" class="container-fluid">
     <div class="row" >
       <div *ngFor="let h of entryHeaders" class="col" [style]="'border: solid;border-width: 1px'">
-        <b>{{ h.name }}</b>
+        <b>{{ h }}</b>
       </div>
       <div *ngIf="dataset.id && (dataset.form || dataset.dataset)" class="col" [style]="'border: solid;border-width: 1px'">
         <b>Actions</b>
@@ -25,7 +25,7 @@
     </div>
     <div *ngFor="let e of filteredEntries(); let i = index" class="row" [style]="'overflow-wrap:break-word;background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
       <div *ngFor="let h of entryHeaders" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
-       <div [style]="'display:flex;max-width:' + h.width + 'px;'">{{ e[h.name] }}</div>
+       <div>{{ e[h] }}</div>
       </div>
       <div *ngIf="dataset.id && (dataset.form || dataset.dataset)" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
         <div class="btn-group special" role="group" aria-label="..." style="padding:5px;">

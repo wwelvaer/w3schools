@@ -8,19 +8,20 @@ import { DbConnectionService } from './db-connection.service';
 export class QueryService {
 
   /**
-   *  query (required): Query used to display data
+   *  Datasets, edit to show different data
+   *  @param query (required) Query used to display data
    *
-   *  id: Column name that holds the Primary Key
+   *  @param id Column name that holds the Primary Key
    *    -> used for editing and deleting data
    *
-   *  dataset: Table name
+   *  @param dataset Table name
    *    -> used for deleting data
    *
-   *  form: InputFields of the form
-   *    Text:
-   *    Number:
-   *    Date:
-   *    Reference: Requires a query with 2 columns: the primary key and a string value
+   *  @param form InputFields of the form
+   *    @param InputField.Text
+   *    @param InputField.Number
+   *    @param InputField.Date
+   *    @param InputField.Reference: Requires a query with 2 columns: the primary key and a string value that will be displayed in the dropdown field
    */
   datasets = {
     Customers: {
@@ -44,7 +45,7 @@ export class QueryService {
         CustomerID: InputField.Reference("SELECT CustomerID, CustomerName FROM Customers"),
         EmployeeID: InputField.Reference("SELECT EmployeeID, CONCAT(FirstName, ' ', LastName) as name FROM Employees"),
         OrderDate: InputField.Date,
-        ShipperID: InputField.Reference("SELECT ShipperID, ShipperName FROM Shippers"),
+        ShipperID: InputField.Reference("SELECT ShipperID, ShipperName FROM Shippers WHERE ShipperID=1492876"),
       }
     },
     Orders_WithNames: {
@@ -88,25 +89,50 @@ export class QueryService {
       dataset: "Suppliers",
       query: "SELECT * FROM Suppliers"
     },
-    Test: {
-      query: "SELECT * FROM Customers"
-    }
   }
 
   constructor(private db: DbConnectionService) { }
 
+  /**
+   * executes a delete query
+   * @param id primary key
+   * @param datasetName table name
+   * @param datasetID primary key column name
+   * @returns promise with db response
+   */
   deleteEntry(id: number, datasetName: string, datasetID: string){
     return this.db.executeQuery(`DELETE FROM ${datasetName} WHERE ${datasetID}=${id}`)
   }
 
+  /**
+   * executes a select query
+   * @param id primary key
+   * @param datasetName table name
+   * @param datasetID primary key column name
+   * @returns promise with requested data
+   */
   getEntry(id: number, datasetName: string, datasetID: string){
     return this.db.executeQuery(`SELECT * FROM ${datasetName} WHERE ${datasetID}=${id}`)
   }
 
+  /**
+   * executes an insert query
+   * @param datasetName table name
+   * @param fields object containing columnnames as keys and data as values
+   * @returns promise with db response
+   */
   createEntry(datasetName: string, fields: Object){
     return this.db.executeQuery(`INSERT INTO ${datasetName} (${Object.keys(fields).join(", ")}) values (${Object.values(fields).map(x => '"' + x + '"').join(", ")})`);
   }
 
+  /**
+   * executes an update query
+   * @param datasetName table name
+   * @param fields object containing columnnames as keys and data as values
+   * @param datasetID primary key column name
+   * @param id primary key of entry to be updated
+   * @returns promise with db response
+   */
   editEntry(datasetName: string, fields: Object, datasetID:string, id: number){
     return this.db.executeQuery(`UPDATE ${datasetName} set ${Object.entries(fields).map(([k, v]) => k + '="' + v + '"').join(", ")} WHERE ${datasetID}=${id}`)
   }
