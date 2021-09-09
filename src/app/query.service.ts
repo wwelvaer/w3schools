@@ -45,7 +45,7 @@ export class QueryService {
         CustomerID: InputField.Reference("SELECT CustomerID, CustomerName FROM Customers"),
         EmployeeID: InputField.Reference("SELECT EmployeeID, CONCAT(FirstName, ' ', LastName) as name FROM Employees"),
         OrderDate: InputField.Date,
-        ShipperID: InputField.Reference("SELECT ShipperID, ShipperName FROM Shippers WHERE ShipperID=1492876"),
+        ShipperID: InputField.Reference("SELECT ShipperID, ShipperName FROM Shippers"),
       }
     },
     Orders_WithNames: {

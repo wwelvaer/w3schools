@@ -13,7 +13,7 @@
       </select>
     </div>
   </div>
-  <p *ngIf="!loading && !error"><i>{{ filteredEntries().length }} results</i></p>
+  <p style="margin: 0px;" *ngIf="!loading && !error"><i>{{ filteredEntries().length }} results</i></p>
   <div *ngIf="!loading && !error" class="container-fluid">
     <div class="row" >
       <div *ngFor="let h of entryHeaders" class="col" [style]="'border: solid;border-width: 1px'">
@@ -23,7 +23,7 @@
         <b>Actions</b>
       </div>
     </div>
-    <div *ngFor="let e of filteredEntries(); let i = index" class="row" [style]="'overflow-wrap:break-word;background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
+    <div *ngFor="let e of filteredEntries(); let i = index" class="row" [style]="'background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
       <div *ngFor="let h of entryHeaders" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
        <div>{{ e[h] }}</div>
       </div>

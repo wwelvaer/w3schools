@@ -9,8 +9,11 @@
         <option *ngFor="let x of e[1]" [value]="x.id"> {{x.name}} </option>
       </select>
     </div>
-    <button type="submit" class="btn btn-success btn-lg">Save</button>
-    <button type="button" (click)="back()" class="btn btn-danger btn-lg">Cancel</button>
+    <div class="btn-group special" role="group" aria-label="..." style="padding:5px;width: 50%;margin-left: 25%;">
+      <button type="submit" class="btn btn-success btn-lg">Save</button>
+      <button type="button" (click)="back()" class="btn btn-danger btn-lg">Cancel</button>
+    </div>
+
   </form>
   <i *ngIf="error"> {{error}}</i>
 </div>
