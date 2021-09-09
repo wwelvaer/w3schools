@@ -58,7 +58,7 @@ export class FormComponent implements OnInit {
             // query didn't match any data
             if (!r["data"] || r["data"].length === 0)
               return this.showError(`Didn't receive any data`)
-            //
+            // data didn't have 2 fields or didn't contain the primary key
             if (!(Object.keys(r["data"][0]).length === 2 && k in r["data"][0]))
               return this.showError("A reference must contain a query that returns 2 fields: ID and a string value")
             // loads data using push to keep the address (reassigning would change the address)

@@ -44,6 +44,7 @@ export class DatasetComponent implements OnInit {
       this.entryHeaders = [];
       this.loading = true;
       this.searchTerm = "";
+      this.searchCol = -1;
 
       // invalid type
       if (!params.type || !(params.type in this.querries.datasets))
