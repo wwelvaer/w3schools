@@ -65,7 +65,7 @@ export class DatasetComponent implements OnInit {
           width: window.innerWidth / (k.length + (this.dataset.id && (this.dataset.url || this.dataset.dataset) ? 1 : 0))
         }});
         this.loading = false;
-        this.title = this.dataset['name']
+        this.title = this.type
       });
     })
   }

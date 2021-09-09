@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { InputField } from '../classes';
 import { DbConnectionService } from '../db-connection.service';
 import { QueryService } from '../query.service';
 
@@ -77,9 +78,9 @@ export class FormComponent implements OnInit {
               this.form.get(k).setValue(v);
           })
         })
-        this.title = `Edit entry of ${this.dataset.name}`
+        this.title = `Edit entry of ${this.type}`
       } else
-        this.title = `Create entry for ${this.dataset.name}`
+        this.title = `Create entry for ${this.type}`
       this.loading = false;
     })
   }

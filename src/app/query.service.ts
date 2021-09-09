@@ -20,7 +20,7 @@ export class QueryService {
    *    Text:
    *    Number:
    *    Date:
-   *    Reference: Requires a query with 2 columns: the foreign key and a string value
+   *    Reference: Requires a query with 2 columns: the primary key and a string value
    */
   datasets = {
     customers: {
