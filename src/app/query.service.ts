@@ -23,7 +23,7 @@ export class QueryService {
    *    Reference: Requires a query with 2 columns: the primary key and a string value
    */
   datasets = {
-    customers: {
+    Customers: {
       id: "CustomerID",
       dataset: "Customers",
       query: "SELECT * FROM Customers",
@@ -37,7 +37,7 @@ export class QueryService {
       }
 
     },
-    orders: {
+    Orders: {
       id: "OrderID",
       dataset: "Orders",
       query: "SELECT * FROM Orders",
@@ -48,10 +48,10 @@ export class QueryService {
         ShipperID: InputField.Reference("SELECT ShipperID, ShipperName FROM Shippers"),
       }
     },
-    ordersWithNames: {
+    Orders_WithNames: {
       id: "OrderID",
       dataset: "Orders",
-      query: "SELECT OrderID, CustomerName, CONCAT(FirstName, ' ', LastName) as EmployeeName, OrderDate, ShipperName  FROM Orders JOIN Shippers USING (ShipperID) JOIN Customers USING (CustomerID) JOIN Employees USING (EmployeeID)",
+      query: "SELECT OrderID, CustomerName, CONCAT(FirstName, ' ', LastName) as EmployeeName, OrderDate, ShipperName FROM Orders JOIN Shippers USING (ShipperID) JOIN Customers USING (CustomerID) JOIN Employees USING (EmployeeID)",
       form: {
         CustomerID: InputField.Reference("SELECT CustomerID, CustomerName FROM Customers"),
         EmployeeID: InputField.Reference("SELECT EmployeeID, CONCAT(FirstName, ' ', LastName) as name FROM Employees"),
@@ -59,16 +59,37 @@ export class QueryService {
         ShipperID: InputField.Reference("SELECT ShipperID, ShipperName FROM Shippers"),
       }
     },
-    products: {
+    Order_details: {
+      id: "OrderDetailID",
+      dataset: "Order_details",
+      query: "SELECT * FROM Order_details",
+      form: {
+        OrderID: InputField.Reference("SELECT OrderID, CONCAT(OrderID, ' - ' , CustomerName) as name FROM Orders JOIN Customers USING(CustomerID)"),
+        ProductID: InputField.Reference("SELECT ProductID, ProductName FROM Products"),
+        Quantity: InputField.Number
+      }
+    },
+    Order_details_WithNames: {
+      id: "OrderDetailID",
+      dataset: "Order_details",
+      query: "SELECT OrderDetailID, OrderID, ProductName, Quantity FROM Order_details JOIN Products USING(ProductID) ORDER BY OrderID",
+      form: {
+        OrderID: InputField.Reference("SELECT OrderID, CONCAT(OrderID, ' - ' , CustomerName) as name FROM Orders JOIN Customers USING(CustomerID)"),
+        ProductID: InputField.Reference("SELECT ProductID, ProductName FROM Products"),
+        Quantity: InputField.Number
+      }
+    },
+    Products: {
       id: "ProductID",
       dataset: "Products",
       query: "SELECT * FROM Products"
     },
-    suppliers: {
+    Suppliers: {
       id: "SupplierID",
       dataset: "Suppliers",
       query: "SELECT * FROM Suppliers"
     },
+
 
   }
 

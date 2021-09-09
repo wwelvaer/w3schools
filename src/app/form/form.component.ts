@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InputField } from '../classes';
 import { DbConnectionService } from '../db-connection.service';
 import { QueryService } from '../query.service';
 
