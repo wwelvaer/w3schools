@@ -13,7 +13,7 @@
       </select>
     </div>
   </div>
-  <p><i>{{ filteredEntries().length }} results</i></p>
+  <p *ngIf="!loading && !error"><i>{{ filteredEntries().length }} results</i></p>
   <div *ngIf="!loading && !error" class="container-fluid">
     <div class="row" >
       <div *ngFor="let h of entryHeaders" class="col" [style]="'border: solid;border-width: 1px'">
@@ -25,7 +25,7 @@
     </div>
     <div *ngFor="let e of filteredEntries(); let i = index" class="row" [style]="'overflow-wrap:break-word;background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
       <div *ngFor="let h of entryHeaders" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
-       <div [style]="'max-width:' + h.width + 'px;'">{{ e[h.name] }}</div>
+       <div [style]="'display:flex;max-width:' + h.width + 'px;'">{{ e[h.name] }}</div>
       </div>
       <div *ngIf="dataset.id && (dataset.form || dataset.dataset)" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
         <div class="btn-group special" role="group" aria-label="..." style="padding:5px;">

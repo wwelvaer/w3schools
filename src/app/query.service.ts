@@ -35,7 +35,6 @@ export class QueryService {
         PostalCode: InputField.Text,
         Country: InputField.Text,
       }
-
     },
     Orders: {
       id: "OrderID",
@@ -89,33 +88,12 @@ export class QueryService {
       dataset: "Suppliers",
       query: "SELECT * FROM Suppliers"
     },
-
-
+    Test: {
+      query: "SELECT * FROM Customers"
+    }
   }
 
   constructor(private db: DbConnectionService) { }
-
-  getCustomer(id: number){
-    return this.db.executeQuery(`SELECT * FROM Customers WHERE CustomerID = ${id}`);
-  }
-
-  createCustomer(CustomerName: string, ContactName: string, Address: string, City: string, PostalCode: string, Country: string){
-    return this.db.executeQuery(
-      `INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
-        values ('${CustomerName}', '${ContactName}', '${Address}', '${City}', '${PostalCode}', '${Country}')`);
-  }
-
-  editCustomer(CustomerId: number, CustomerName: string, ContactName: string, Address: string, City: string, PostalCode: string, Country: string){
-    return this.db.executeQuery(
-      `UPDATE Customers set
-          CustomerName='${CustomerName}',
-          ContactName='${ContactName}',
-          Address='${Address}',
-          City='${City}',
-          PostalCode='${PostalCode}',
-          Country='${Country}'
-        WHERE CustomerId=${CustomerId}`);
-  }
 
   deleteEntry(id: number, datasetName: string, datasetID: string){
     return this.db.executeQuery(`DELETE FROM ${datasetName} WHERE ${datasetID}=${id}`)
