@@ -15,6 +15,7 @@ export class DatasetComponent implements OnInit {
   entries: Object[];
   entryHeaders: string[];
   error: string;
+  warning: string;
   type: string;
 
   searchTerm: string;
@@ -57,7 +58,7 @@ export class DatasetComponent implements OnInit {
           return this.showError(d['error'])
         // query didn't match any data
         if (!d['data'] || d['data'].length === 0)
-          return this.showError(`Didn't receive any data`)
+          return this.showWarning(`Didn't receive any data`)
         // save data
         this.entries = d['data'];
         this.entryHeaders = Object.keys(this.entries[0]);
@@ -67,20 +68,26 @@ export class DatasetComponent implements OnInit {
     })
   }
 
-  showError(err){
+  showError(err: string){
     this.title = "ERROR"
     this.error = err;
     this.loading = false;
   }
 
+  showWarning(warning: string){
+    this.warning = warning;
+    this.loading = false;
+    this.title = this.type
+  }
+
   deleteEntry(id){
-    this.querries.deleteEntry(id, this.dataset.dataset, this.dataset.id).then((r) => {
+    this.querries.deleteEntry(id, this.dataset.tableName, this.dataset.PK).then((r) => {
       //database error
       if (r['error'])
         return this.showError(r['error'])
       // checks if database was affected, then deletes entry locally
       if (r['data']['affectedRows'] === 1)
-        this.entries = this.entries.filter(x => x[this.dataset.id] !== id)
+        this.entries = this.entries.filter(x => x[this.dataset.PK] !== id)
       else
         this.showError("Something went wrong")
     })

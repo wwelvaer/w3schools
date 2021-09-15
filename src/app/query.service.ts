@@ -11,10 +11,10 @@ export class QueryService {
    *  Datasets, edit to show different data
    *  @param query (required) Query used to display data
    *
-   *  @param id Column name that holds the Primary Key
+   *  @param PK Column name that holds the Primary Key(s)
    *    -> used for editing and deleting data
    *
-   *  @param dataset Table name
+   *  @param tableName Table name
    *    -> used for deleting data
    *
    *  @param form InputFields of the form
@@ -25,8 +25,8 @@ export class QueryService {
    */
   datasets = {
     Customers: {
-      id: "CustomerID",
-      dataset: "Customers",
+      PK: "CustomerID",
+      tableName: "Customers",
       query: "SELECT * FROM Customers",
       form: {
         CustomerName: InputField.Text,
@@ -38,8 +38,8 @@ export class QueryService {
       }
     },
     Orders: {
-      id: "OrderID",
-      dataset: "Orders",
+      PK: "OrderID",
+      tableName: "Orders",
       query: "SELECT * FROM Orders",
       form: {
         CustomerID: InputField.Reference("SELECT CustomerID, CustomerName FROM Customers"),
@@ -49,8 +49,8 @@ export class QueryService {
       }
     },
     Orders_WithNames: {
-      id: "OrderID",
-      dataset: "Orders",
+      PK: "OrderID",
+      tableName: "Orders",
       query: "SELECT OrderID, CustomerName, CONCAT(FirstName, ' ', LastName) as EmployeeName, OrderDate, ShipperName FROM Orders JOIN Shippers USING (ShipperID) JOIN Customers USING (CustomerID) JOIN Employees USING (EmployeeID)",
       form: {
         CustomerID: InputField.Reference("SELECT CustomerID, CustomerName FROM Customers"),
@@ -60,8 +60,8 @@ export class QueryService {
       }
     },
     Order_details: {
-      id: "OrderDetailID",
-      dataset: "Order_details",
+      PK: "OrderDetailID",
+      tableName: "Order_details",
       query: "SELECT * FROM Order_details",
       form: {
         OrderID: InputField.Reference("SELECT OrderID, CONCAT(OrderID, ' - ' , CustomerName) as name FROM Orders JOIN Customers USING(CustomerID)"),
@@ -70,8 +70,8 @@ export class QueryService {
       }
     },
     Order_details_WithNames: {
-      id: "OrderDetailID",
-      dataset: "Order_details",
+      PK: "OrderDetailID",
+      tableName: "Order_details",
       query: "SELECT OrderDetailID, OrderID, ProductName, Quantity FROM Order_details JOIN Products USING(ProductID) ORDER BY OrderID",
       form: {
         OrderID: InputField.Reference("SELECT OrderID, CONCAT(OrderID, ' - ' , CustomerName) as name FROM Orders JOIN Customers USING(CustomerID)"),
@@ -80,15 +80,49 @@ export class QueryService {
       }
     },
     Products: {
-      id: "ProductID",
-      dataset: "Products",
+      PK: "ProductID",
+      tableName: "Products",
+      query: "SELECT * FROM Products"
+    },
+    test: {
+      PK: "ProductID",
+      tableName: "Products",
       query: "SELECT * FROM Products"
     },
     Suppliers: {
-      id: "SupplierID",
-      dataset: "Suppliers",
+      PK: "SupplierID",
+      tableName: "Suppliers",
       query: "SELECT * FROM Suppliers"
     },
+    Ships: {​
+      PK:"imoID",
+      tableName:"Ships",
+      query:"select * from Ships",
+      form: {​
+      imoID:InputField.Text,
+      shipType:InputField.Text
+      }​
+    }​,
+    Shippers: {​
+      PK:"ShipperID",
+      tableName:"Shippers",
+      query:"select * from Shippers",
+      form: {​
+      ShipperName:InputField.Text,
+      Phone:InputField.Text
+      }​
+    }​,
+    Trips: {​
+      PK:"ShipperID",
+      tableName:"Trips",
+      query:"select Shippers.ShipperName, Ships.imoID, Ships.shipType, Trips.trip_time from Trips INNER JOIN Ships ON Ships.imoID = Trips.imoID INNER JOIN Shippers ON Shippers.ShipperID = Trips.ShipperID",
+      form: {​
+      ShipperID:InputField.Reference("select ShipperID, ShipperName from Shippers"),
+      imoID:InputField.Text,
+      trip_time:InputField.Number
+      }​
+  }​
+
   }
 
   constructor(private db: DbConnectionService) { }
@@ -100,8 +134,8 @@ export class QueryService {
    * @param datasetID primary key column name
    * @returns promise with db response
    */
-  deleteEntry(id: number, datasetName: string, datasetID: string){
-    return this.db.executeQuery(`DELETE FROM ${datasetName} WHERE ${datasetID}=${id}`)
+  deleteEntry(id: string, datasetName: string, datasetID: string){
+    return this.db.executeQuery(`DELETE FROM ${datasetName} WHERE ${datasetID}='${id}'`)
   }
 
   /**
@@ -111,8 +145,8 @@ export class QueryService {
    * @param datasetID primary key column name
    * @returns promise with requested data
    */
-  getEntry(id: number, datasetName: string, datasetID: string){
-    return this.db.executeQuery(`SELECT * FROM ${datasetName} WHERE ${datasetID}=${id}`)
+  getEntry(id: string, datasetName: string, datasetID: string){
+    return this.db.executeQuery(`SELECT * FROM ${datasetName} WHERE ${datasetID}='${id}'`)
   }
 
   /**
@@ -133,7 +167,7 @@ export class QueryService {
    * @param id primary key of entry to be updated
    * @returns promise with db response
    */
-  editEntry(datasetName: string, fields: Object, datasetID:string, id: number){
-    return this.db.executeQuery(`UPDATE ${datasetName} set ${Object.entries(fields).map(([k, v]) => k + '="' + v + '"').join(", ")} WHERE ${datasetID}=${id}`)
+  editEntry(datasetName: string, fields: Object, datasetID:string, id: string){
+    return this.db.executeQuery(`UPDATE ${datasetName} set ${Object.entries(fields).map(([k, v]) => k + '="' + v + '"').join(", ")} WHERE ${datasetID}='${id}'`)
   }
 }

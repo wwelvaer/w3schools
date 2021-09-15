@@ -19,7 +19,7 @@ export class FormComponent implements OnInit {
   title: string;
   error: string;
   loading: boolean;
-  id: number;
+  id: string;
   dataset;
 
   constructor(private route: ActivatedRoute,
@@ -31,7 +31,7 @@ export class FormComponent implements OnInit {
     this.route.params.subscribe((params) => {
       // restore default variables
       this.loading = true;
-      this.id = -1;
+      this.id = "";
       this.title = "Loading...";
       this.error = "";
 
@@ -52,6 +52,7 @@ export class FormComponent implements OnInit {
            *  @var l used as reference address, will be initially empty and filled when the data is received
            */
           this.db.executeQuery(v).then((r) => {
+            console.log(r)
             // database error
             if (r["error"])
               return this.showError(r["error"])
@@ -60,7 +61,7 @@ export class FormComponent implements OnInit {
               return this.showError(`Didn't receive any data`)
             // data didn't have 2 fields or didn't contain the primary key
             if (!(Object.keys(r["data"][0]).length === 2 && k in r["data"][0]))
-              return this.showError("A reference must contain a query that returns 2 fields: ID and a string value")
+              return this.showError("A reference must contain a query that returns 2 fields: PK and a string value")
             // loads data using push to keep the address (reassigning would change the address)
             let nameKey = Object.keys(r["data"][0]).filter(x => x !== k)[0]
             r["data"].forEach(x => {
@@ -80,18 +81,18 @@ export class FormComponent implements OnInit {
 
       // id parameter is given when editing an already existing entry
       if (params.id){
-        this.id = params.id;
+        this.id = params.id.toString();
         // dataset has to contain dataset and id attribute
-        if (!(this.dataset.dataset && this.dataset.id))
-          return this.showError("Dataset '" + params.type + "' has no dataset or id attribute");
+        if (!(this.dataset.tableName && this.dataset.PK))
+          return this.showError("Dataset '" + params.type + "' has no dataset or PK attribute");
         // fetch entry data using id
-        this.querries.getEntry(params.id, this.dataset.dataset, this.dataset.id).then((r) => {
+        this.querries.getEntry(params.id, this.dataset.tableName, this.dataset.PK).then((r) => {
           // database error
           if (r["error"])
             return this.showError(r["error"])
           // empty response
           if (!(r["data"] && r["data"][0]))
-            return this.showError(`No entry in ${this.dataset.dataset} found with id ${params.id}`)
+            return this.showError(`No entry in ${this.dataset.tableName} found with PK '${params.id}'`)
           // fill out form fields
           Object.entries(r["data"][0]).forEach(([k, v])=> {
             if (k in this.dataset.form)
@@ -119,10 +120,10 @@ export class FormComponent implements OnInit {
         d[k] = typeof v === "string" ? this.sanitizeString(v) : v;
     });
     // id == -1 when no id param is given
-    if (this.id < 0)
-      this.querries.createEntry(this.dataset.dataset, d).then(this.afterSubmit);
+    if (!this.id)
+      this.querries.createEntry(this.dataset.tableName, d).then(this.afterSubmit);
     else
-      this.querries.editEntry(this.dataset.dataset, d, this.dataset.id, this.id).then(this.afterSubmit);
+      this.querries.editEntry(this.dataset.tableName, d, this.dataset.PK, this.id).then(this.afterSubmit);
   }
 
   // prevents SQL injections

@@ -1,7 +1,7 @@
 <div style="margin: 10px;">
   <h1>{{title}}</h1>
   <div class="input-group mb-3" *ngIf="!loading && !error">
-    <button *ngIf="dataset.form && dataset.id" type="submit" class="btn btn-success" [routerLink]="['/form', type]">Add new</button>
+    <button *ngIf="dataset.form && dataset.PK" type="submit" class="btn btn-success" [routerLink]="['/form', type]">Add new</button>
     <div class="input-group-prepend">
       <span class="input-group-text" id="basic-addon1">🔎</span>
     </div>
@@ -14,12 +14,12 @@
     </div>
   </div>
   <p style="margin: 0px;" *ngIf="!loading && !error"><i>{{ filteredEntries().length }} results</i></p>
-  <div *ngIf="!loading && !error" class="container-fluid">
+  <div *ngIf="!loading && !error && !warning" class="container-fluid">
     <div class="row" >
       <div *ngFor="let h of entryHeaders" class="col" [style]="'border: solid;border-width: 1px'">
         <b>{{ h }}</b>
       </div>
-      <div *ngIf="dataset.id && (dataset.form || dataset.dataset)" class="col" [style]="'border: solid;border-width: 1px'">
+      <div *ngIf="dataset.PK && (dataset.form || dataset.tableName)" class="col" [style]="'border: solid;border-width: 1px'">
         <b>Actions</b>
       </div>
     </div>
@@ -27,13 +27,14 @@
       <div *ngFor="let h of entryHeaders" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
        <div>{{ e[h] }}</div>
       </div>
-      <div *ngIf="dataset.id && (dataset.form || dataset.dataset)" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
+      <div *ngIf="dataset.PK && (dataset.form || dataset.tableName)" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
         <div class="btn-group special" role="group" aria-label="..." style="padding:5px;">
-          <button *ngIf="dataset.form" type="button" class="btn btn-outline-success" [routerLink]="['/form', type, e[dataset.id]]">✏️</button>
-          <button *ngIf="dataset.dataset" type="button" class="btn btn-outline-danger" (click)="deleteEntry(e[dataset.id])">🗑️</button>
+          <button *ngIf="dataset.form" type="button" class="btn btn-outline-success" [routerLink]="['/form', type, e[dataset.PK]]">✏️</button>
+          <button *ngIf="dataset.tableName" type="button" class="btn btn-outline-danger" (click)="deleteEntry(e[dataset.PK])">🗑️</button>
         </div>
       </div>
     </div>
   </div>
   <i *ngIf="error"> {{error}}</i>
+  <i *ngIf="warning"> {{warning}}</i>
 </div>
