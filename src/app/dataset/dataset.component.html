@@ -15,7 +15,7 @@
   </div>
   <div *ngIf="!loading && !error">
     <div *ngIf="filteredEntries() as ent">
-      <p style="margin: 0px;"><i>{{ (ent.length > 500 ? "Showing 500 of " : "" ) + ent.length}} results</i></p>
+      <p style="margin: 0px;"><i>{{ (ent.length > entryLimit ? "Showing " + entryLimit + " of " : "" ) + ent.length}} results</i></p>
       <div *ngIf="!warning" class="container-fluid">
         <div class="row" >
           <div *ngFor="let h of entryHeaders" class="col" [style]="'border: solid;border-width: 1px'">
@@ -25,7 +25,7 @@
             <b>Actions</b>
           </div>
         </div>
-        <div *ngFor="let e of ent.slice(0, 500); let i = index" class="row" [style]="'background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
+        <div *ngFor="let e of ent.slice(0, entryLimit); let i = index" class="row" [style]="'background-color:' + (i%2 === 0 ? '#74ADFF' : '#B5D3FF')">
           <div *ngFor="let h of entryHeaders" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
            <div>{{ e[h] }}</div>
           </div>

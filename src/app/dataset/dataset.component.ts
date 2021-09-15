@@ -21,6 +21,8 @@ export class DatasetComponent implements OnInit {
   searchTerm: string;
   searchCol: number = -1;
 
+  entryLimit: number = 100;
+
   constructor(
     private route: ActivatedRoute,
     private db: DbConnectionService,
