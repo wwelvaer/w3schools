@@ -19,7 +19,7 @@ export class FormComponent implements OnInit {
   title: string;
   error: string;
   loading: boolean;
-  id: string;
+  PK: object;
   dataset;
 
   constructor(private route: ActivatedRoute,
@@ -31,7 +31,7 @@ export class FormComponent implements OnInit {
     this.route.params.subscribe((params) => {
       // restore default variables
       this.loading = true;
-      this.id = "";
+      this.PK = {};
       this.title = "Loading...";
       this.error = "";
 
@@ -78,31 +78,37 @@ export class FormComponent implements OnInit {
         fg[k] = new FormControl('');
       })
       this.form = new FormGroup(fg);
-
-      // id parameter is given when editing an already existing entry
-      if (params.id){
-        this.id = params.id.toString();
-        // dataset has to contain dataset and id attribute
-        if (!(this.dataset.tableName && this.dataset.PK))
-          return this.showError("Dataset '" + params.type + "' has no dataset or PK attribute");
-        // fetch entry data using id
-        this.querries.getEntry(params.id, this.dataset.tableName, this.dataset.PK).then((r) => {
-          // database error
-          if (r["error"])
-            return this.showError(r["error"])
-          // empty response
-          if (!(r["data"] && r["data"][0]))
-            return this.showError(`No entry in ${this.dataset.tableName} found with PK '${params.id}'`)
-          // fill out form fields
-          Object.entries(r["data"][0]).forEach(([k, v])=> {
-            if (k in this.dataset.form)
-              this.form.get(k).setValue(v);
+      // Primary key(s) are given as parameter(s) when editing an already existing entry
+      this.route.queryParamMap.subscribe(qMap => {
+        qMap = qMap['params']
+        if (Object.keys(qMap).length !== 0){
+          // dataset has to contain dataset and PK attribute
+          if (!(this.dataset.tableName && this.dataset.PK))
+            return this.showError("Dataset '" + params.type + "' has no dataset or PK attribute");
+          // checks if query parameters match the primary keys
+          if ((typeof this.dataset.PK === "object" && !(Object.keys(qMap).length === this.dataset.PK.length && this.dataset.PK.every(x => x in qMap))) ||
+          (typeof this.dataset.PK !== "object" && !(Object.keys(qMap).length === 1 && this.dataset.PK in qMap)))
+            return this.showError("Given parameter(s) do(es) not match the primary key(s)")
+          // fetch entry data using id
+          this.PK = qMap
+          this.querries.getEntry(qMap, this.dataset.tableName).then((r) => {
+            // database error
+            if (r["error"])
+              return this.showError(r["error"])
+            // empty response
+            if (!(r["data"] && r["data"][0]))
+              return this.showError(`No entry in ${this.dataset.tableName} found with ${Object.entries(qMap).map(([k,v]) => k + ' = "' + v + '"').join(', ')}`)
+            // fill out form fields
+            Object.entries(r["data"][0]).forEach(([k, v])=> {
+              if (k in this.dataset.form)
+                this.form.get(k).setValue(v);
+            })
           })
-        })
-        this.title = `Edit entry of ${this.type}`
-      } else
-        this.title = `Create entry for ${this.type}`
-      this.loading = false;
+          this.title = `Edit entry of ${this.type}`
+        } else
+          this.title = `Create entry for ${this.type}`
+        this.loading = false;
+      })
     })
   }
 
@@ -119,11 +125,11 @@ export class FormComponent implements OnInit {
       if (v)
         d[k] = typeof v === "string" ? this.sanitizeString(v) : v;
     });
-    // id == -1 when no id param is given
-    if (!this.id)
+    // this.PK = {} when creating new user
+    if (Object.keys(this.PK).length === 0)
       this.querries.createEntry(this.dataset.tableName, d).then(this.afterSubmit);
     else
-      this.querries.editEntry(this.dataset.tableName, d, this.dataset.PK, this.id).then(this.afterSubmit);
+      this.querries.editEntry(this.dataset.tableName, d, this.PK).then(this.afterSubmit);
   }
 
   // prevents SQL injections

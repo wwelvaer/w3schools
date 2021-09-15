@@ -80,16 +80,26 @@ export class DatasetComponent implements OnInit {
     this.title = this.type
   }
 
-  deleteEntry(id){
-    this.querries.deleteEntry(id, this.dataset.tableName, this.dataset.PK).then((r) => {
+  deleteEntry(PK: object){
+    this.querries.deleteEntry(PK, this.dataset.tableName).then((r) => {
       //database error
       if (r['error'])
         return this.showError(r['error'])
       // checks if database was affected, then deletes entry locally
       if (r['data']['affectedRows'] === 1)
-        this.entries = this.entries.filter(x => x[this.dataset.PK] !== id)
+        this.entries = this.entries.filter(x => !Object.entries(PK).every(([k, v]) => x[k] === v))
       else
         this.showError("Something went wrong")
     })
+  }
+
+  // extracts All primary keys from entry
+  extractPK(e: object):object{
+    let obj = {};
+    if (typeof this.dataset.PK !== "object")
+      obj[this.dataset.PK] = e[this.dataset.PK]
+    else
+      this.dataset.PK.forEach(x => {obj[x] = e[x]});
+    return obj;
   }
 }

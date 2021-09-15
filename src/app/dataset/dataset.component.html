@@ -29,8 +29,8 @@
       </div>
       <div *ngIf="dataset.PK && (dataset.form || dataset.tableName)" class="col" style="border: solid;border-width: 1px;border-top: transparent;">
         <div class="btn-group special" role="group" aria-label="..." style="padding:5px;">
-          <button *ngIf="dataset.form" type="button" class="btn btn-outline-success" [routerLink]="['/form', type, e[dataset.PK]]">✏️</button>
-          <button *ngIf="dataset.tableName" type="button" class="btn btn-outline-danger" (click)="deleteEntry(e[dataset.PK])">🗑️</button>
+          <button *ngIf="dataset.form" type="button" class="btn btn-outline-success" [routerLink]="['/form', type]" [queryParams]="extractPK(e)">✏️</button>
+          <button *ngIf="dataset.tableName" type="button" class="btn btn-outline-danger" (click)="deleteEntry(extractPK(e))">🗑️</button>
         </div>
       </div>
     </div>

@@ -5,10 +5,9 @@ import { FormComponent } from './form/form.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dataset/Customers', pathMatch: 'full' },
-  { path: 'dataset', redirectTo: '/dataset/Customers', pathMatch: 'full' },
   { path: 'dataset/:type', component: DatasetComponent },
-  { path: 'form/:type', component: FormComponent },
-  { path: 'form/:type/:id', component: FormComponent },
+  { path: 'form/:type', component: FormComponent},
+  { path: '**', redirectTo: '/dataset/Customers', pathMatch: 'full' },
 ];
 
 @NgModule({

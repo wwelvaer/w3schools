@@ -10,9 +10,12 @@ export class QueryService {
   /**
    *  Datasets, edit to show different data
    *  @param query (required) Query used to display data
+   *    -> must contain primary key(s) to edit or delete data
    *
    *  @param PK Column name that holds the Primary Key(s)
    *    -> used for editing and deleting data
+   *    -> single primary key stored as string e.g. "key"
+   *    -> multiple primary keys stored as array e.g. ["key1", "key2"]
    *
    *  @param tableName Table name
    *    -> used for deleting data
@@ -113,40 +116,39 @@ export class QueryService {
       }​
     }​,
     Trips: {​
-      PK:"ShipperID",
+      PK:["ShipperID", "imoID"],
       tableName:"Trips",
-      query:"select Shippers.ShipperName, Ships.imoID, Ships.shipType, Trips.trip_time from Trips INNER JOIN Ships ON Ships.imoID = Trips.imoID INNER JOIN Shippers ON Shippers.ShipperID = Trips.ShipperID",
+      query:"select Shippers.ShipperID, Shippers.ShipperName, Ships.imoID, Ships.shipType, Trips.trip_time from Trips INNER JOIN Ships ON Ships.imoID = Trips.imoID INNER JOIN Shippers ON Shippers.ShipperID = Trips.ShipperID",
       form: {​
       ShipperID:InputField.Reference("select ShipperID, ShipperName from Shippers"),
       imoID:InputField.Text,
       trip_time:InputField.Number
-      }​
-  }​
-
+      }​,
+    }​,
   }
 
   constructor(private db: DbConnectionService) { }
 
   /**
    * executes a delete query
-   * @param id primary key
+   * @param PK Object {primary key: value}
    * @param datasetName table name
    * @param datasetID primary key column name
    * @returns promise with db response
    */
-  deleteEntry(id: string, datasetName: string, datasetID: string){
-    return this.db.executeQuery(`DELETE FROM ${datasetName} WHERE ${datasetID}='${id}'`)
+  deleteEntry(PK: object, datasetName: string){
+    return this.db.executeQuery(`DELETE FROM ${datasetName} WHERE ${Object.entries(PK).map(([k,v]) => `${k}="${v}"`).join(" AND ")}`)
   }
 
   /**
    * executes a select query
-   * @param id primary key
+   * @param PK Object {primary key: value}
    * @param datasetName table name
    * @param datasetID primary key column name
    * @returns promise with requested data
    */
-  getEntry(id: string, datasetName: string, datasetID: string){
-    return this.db.executeQuery(`SELECT * FROM ${datasetName} WHERE ${datasetID}='${id}'`)
+  getEntry(PK: object, datasetName: string){
+    return this.db.executeQuery(`SELECT * FROM ${datasetName} WHERE ${Object.entries(PK).map(([k,v]) => `${k}="${v}"`).join(" AND ")}`)
   }
 
   /**
@@ -156,7 +158,7 @@ export class QueryService {
    * @returns promise with db response
    */
   createEntry(datasetName: string, fields: Object){
-    return this.db.executeQuery(`INSERT INTO ${datasetName} (${Object.keys(fields).join(", ")}) values (${Object.values(fields).map(x => '"' + x + '"').join(", ")})`);
+    return this.db.executeQuery(`INSERT INTO ${datasetName} (${Object.keys(fields).join(", ")}) values (${Object.values(fields).map(x => `"${x}"`).join(", ")})`);
   }
 
   /**
@@ -164,10 +166,10 @@ export class QueryService {
    * @param datasetName table name
    * @param fields object containing columnnames as keys and data as values
    * @param datasetID primary key column name
-   * @param id primary key of entry to be updated
+   * @param PK Object {primary key: value}
    * @returns promise with db response
    */
-  editEntry(datasetName: string, fields: Object, datasetID:string, id: string){
-    return this.db.executeQuery(`UPDATE ${datasetName} set ${Object.entries(fields).map(([k, v]) => k + '="' + v + '"').join(", ")} WHERE ${datasetID}='${id}'`)
+  editEntry(datasetName: string, fields: Object, PK: object){
+    return this.db.executeQuery(`UPDATE ${datasetName} set ${Object.entries(fields).map(([k, v]) => `${k}='${v}'`).join(", ")} WHERE ${Object.entries(PK).map(([k,v]) => `${k}="${v}"`).join(" AND ")}`)
   }
 }
